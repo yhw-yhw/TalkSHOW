@@ -6,6 +6,11 @@ Please visit our [**webpage**](https://talkshow.is.tue.mpg.de/) for more details
 
 ![teaser](visualise/teaser_01.png)
 
+## TODO
+
+- [ ] Hugging Face Demo
+- [ ] Animated 2D videos by the generated motion from TalkSHOW.
+
 ## Getting started
 
 The training code was tested on `Ubuntu 18.04.5 LTS` and the visualization code was test on `Windows 10`, and it requires:
