@@ -38,7 +38,7 @@ Please install [**MPI-Mesh**](https://github.com/MPI-IS/mesh).
 
 Please note that if you only want to generate demo videos, you can skip this step and directly download the pretrained models.
 
-Download [**dataset**](https://download.is.tue.mpg.de/download.php?domain=talkshow&resume=1&sfile=SHOW_dataset_v1.0.zip) from [**TalkSHOW download webpage**](https://talkshow.is.tue.mpg.de/download.php),
+Download [**SHOW_dataset_v1.0.zip**](https://download.is.tue.mpg.de/download.php?domain=talkshow&resume=1&sfile=SHOW_dataset_v1.0.zip) from [**TalkSHOW download webpage**](https://talkshow.is.tue.mpg.de/download.php),
 unzip using ``for i in $(ls *.tar.gz);do tar xvf $i;done``,
 and run ``python data_utils/dataset_preprocess.py`` to check and split dataset.
 Modify ``data_root`` in ``config/*.json`` to the dataset-path.
