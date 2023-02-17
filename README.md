@@ -38,7 +38,7 @@ Please install [**MPI-Mesh**](https://github.com/MPI-IS/mesh).
 
 Please note that if you only want to generate demo videos, you can skip this step and directly download the pretrained models.
 
-Download [**dataset**](https://www.dropbox.com/scl/fo/ejqovk3y25is1sf8fjeo8/h?dl=0&rlkey=ch6tkl62chkmyzjv0w4n6via4),
+Download [**dataset**](https://download.is.tue.mpg.de/download.php?domain=talkshow&resume=1&sfile=SHOW_dataset_v1.0.zip) from [**TalkSHOW download webpage**](https://talkshow.is.tue.mpg.de/download.php),
 unzip using ``for i in $(ls *.tar.gz);do tar xvf $i;done``,
 and run ``python data_utils/dataset_preprocess.py`` to check and split dataset.
 Modify ``data_root`` in ``config/*.json`` to the dataset-path.
@@ -68,7 +68,7 @@ Modify the arguments in ``test_face.sh`` and ``test_body.sh``. Then
 
 If you ssh into the linux machine, NotImplementedError might occur. In this case, please refer to [**issue**](https://github.com/MPI-IS/mesh/issues/66) for solving the error.
 
-Download [**smplx model**](https://drive.google.com/file/d/1Ly_hQNLQcZ89KG0Nj4jYZwccQiimSUVn/view?usp=share_link)
+Download [**smplx model**](https://drive.google.com/file/d/1Ly_hQNLQcZ89KG0Nj4jYZwccQiimSUVn/view?usp=share_link) (Please register in the official [**SMPLX webpage**](https://smpl-x.is.tue.mpg.de) before you use it.)
 and place it in ``path-to-TalkSHOW/visualise/smplx_model``.
 To visualise the test set and generated result (in each video, left: generated result | right: ground truth).
 The videos and generated motion data are saved in ``./visualise/video/body-pixel``:
