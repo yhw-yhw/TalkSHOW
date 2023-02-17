@@ -115,3 +115,7 @@ Here are some great resources we benefit:
 - [Freeform](https://github.com/TheTempAccount/Co-Speech-Motion-Generation) for training pipeline
 - [MPI-Mesh](https://github.com/MPI-IS/mesh), [Pyrender](https://github.com/mmatl/pyrender), [Smplx](https://github.com/vchoutas/smplx), [VOCA](https://github.com/TimoBolkart/voca) for rendering  
 - [Wav2Vec2](https://huggingface.co/facebook/wav2vec2-base-960h) and [Faceformer](https://github.com/EvelynFan/FaceFormer) for audio encoder
+
+## Contact
+For questions, please contact talkshow@tue.mpg.de
+For commercial licensing, please contact ps-licensing@tue.mpg.de
