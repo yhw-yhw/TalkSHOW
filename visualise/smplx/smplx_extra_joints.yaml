@@ -1,0 +1,132 @@
+head_top:
+  bc:
+  - 0.8277337276382795
+  - 0.1422200962169292
+  - 0.030046176144791284
+  face: 2581
+left_big_toe:
+  bc:
+  - 0.0
+  - 0.0
+  - 1.0
+  face: 4407
+left_ear:
+  bc:
+  - 0.0
+  - 0.0
+  - 1.0
+  face: 1946
+left_eye:
+  bc:
+  - 0.0
+  - 1.0
+  - 0.0
+  face: 9470
+left_heel:
+  bc:
+  - 1.0
+  - 0.0
+  - 0.0
+  face: 4621
+left_index:
+  bc:
+  - 0.0
+  - 0.0
+  - 1.0
+  face: 3720
+left_middle:
+  bc:
+  - 0.0
+  - 0.0
+  - 1.0
+  face: 3469
+left_pinky:
+  bc:
+  - 1.0
+  - 0.0
+  - 0.0
+  face: 3575
+left_ring:
+  bc:
+  - 0.0
+  - 0.0
+  - 1.0
+  face: 3542
+left_small_toe:
+  bc:
+  - 1.0
+  - 0.0
+  - 0.0
+  face: 4329
+left_thumb:
+  bc:
+  - 0.0
+  - 1.0
+  - 0.0
+  face: 3630
+nose:
+  bc:
+  - 0.0
+  - 1.0
+  - 0.0
+  face: 9041
+right_big_toe:
+  bc:
+  - 1.0
+  - 0.0
+  - 0.0
+  face: 8094
+right_ear:
+  bc:
+  - 1.0
+  - 0.0
+  - 0.0
+  face: 351
+right_eye:
+  bc:
+  - 1.0
+  - 0.0
+  - 0.0
+  face: 10093
+right_heel:
+  bc:
+  - 1.0
+  - 0.0
+  - 0.0
+  face: 8247
+right_index:
+  bc:
+  - 1.0
+  - 0.0
+  - 0.0
+  face: 6919
+right_middle:
+  bc:
+  - 0.0
+  - 0.0
+  - 1.0
+  face: 7050
+right_pinky:
+  bc:
+  - 1.0
+  - 0.0
+  - 0.0
+  face: 7284
+right_ring:
+  bc:
+  - 0.0
+  - 0.0
+  - 1.0
+  face: 7168
+right_small_toe:
+  bc:
+  - 0.0
+  - 0.0
+  - 1.0
+  face: 8096
+right_thumb:
+  bc:
+  - 0.0
+  - 0.0
+  - 1.0
+  face: 7370

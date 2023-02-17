@@ -1,0 +1,14 @@
+numpy~=1.21.5
+transformers~=4.22.1
+matplotlib~=3.2.2
+textgrid~=1.5
+smplx~=0.1.28
+scikit-learn~=1.0.2
+pyrender~=0.1.45
+trimesh~=3.14.1
+tqdm~=4.64.1
+librosa~=0.9.2
+scipy~=1.7.3
+python_speech_features~=0.6
+opencv-python~=4.7.0.68
+pyglet~=1.5
