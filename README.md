@@ -50,7 +50,7 @@ Modify ``data_root`` in ``config/*.json`` to the dataset-path.
 
 ### 3. Download the pretrained models (Optional)
 
-Download [**pretrained models**](https://drive.google.com/file/d/1W0ZoUCOJ2ron5VLhRwS9c8W2_E70tIH2/view?usp=share_link),
+Download [**pretrained models**](https://drive.google.com/file/d/1jKBS_30NMM_NZEyUSBDSgBcRJmlH77a-/view?usp=sharing),
 unzip and place it in the TalkSHOW folder, i.e. ``path-to-TalkSHOW/experiments``.
 
 ### 4. Training
@@ -122,6 +122,6 @@ Here are some great resources we benefit:
 - [Wav2Vec2](https://huggingface.co/facebook/wav2vec2-base-960h) and [Faceformer](https://github.com/EvelynFan/FaceFormer) for audio encoder
 
 ## Contact
-For questions, please contact talkshow@tue.mpg.de
+For questions, please contact talkshow@tue.mpg.de or hongwei.yi@tuebingen.mpg.de or fthualinliang@mail.scut.edu.cn or ft_lyf@mail.scut.edu.cn
 
 For commercial licensing, please contact ps-licensing@tue.mpg.de
