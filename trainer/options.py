@@ -23,7 +23,7 @@ def parse_args():
 
     # for visualization and test
     parser.add_argument('--audio_file', default=None, type=str)
-    parser.add_argument('--id', required=True, type=int, help='0=oliver, 1=chemistry, 2=seth, 3=conan')
+    parser.add_argument('--id', default=0, type=int, help='0=oliver, 1=chemistry, 2=seth, 3=conan')
     parser.add_argument('--only_face', action='store_true')
     parser.add_argument('--stand', action='store_true')
     parser.add_argument('--whole_body', action='store_true')
