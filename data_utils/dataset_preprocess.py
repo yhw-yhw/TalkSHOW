@@ -7,7 +7,7 @@ import numpy as np
 import librosa
 import random
 
-speakers = ['seth', 'conan', 'oliver']
+speakers = ['seth', 'conan', 'oliver', 'chemistry']
 data_root = "../ExpressiveWholeBodyDatasetv1.0/"
 split = 'train'
 
