@@ -54,6 +54,7 @@ Download [**pretrained models**](https://drive.google.com/file/d/1jKBS_30NMM_NZE
 unzip and place it in the TalkSHOW folder, i.e. ``path-to-TalkSHOW/experiments``.
 
 ### 4. Training
+Please note that the process of loading data for the first time can be quite slow. If you have already completed the loading process, setting ``dataset_load_mode`` to ``pickle`` in ``config/[config_name].json`` will make the loading process much faster.
 
     # 1. Train VQ-VAEs. 
     bash train_body_vq.sh
