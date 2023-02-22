@@ -28,7 +28,7 @@ def init_model(model_name, model_path, args, config):
             args,
             config,
         )
-    if model_name == 's2g_body_vq':
+    elif model_name == 's2g_body_vq':
         generator = s2g_body_vq(
             args,
             config,

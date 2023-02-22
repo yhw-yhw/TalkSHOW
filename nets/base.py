@@ -55,3 +55,35 @@ class TrainWrapperBaseClass():
 
     def infer_on_audio(self, aud_fn, initial_pose=None, norm_stats=None, **kwargs):
         raise NotImplementedError
+
+    def init_params(self):
+        if self.config.Data.pose.convert_to_6d:
+            scale = 2
+        else:
+            scale = 1
+
+        global_orient = round(0 * scale)
+        leye_pose = reye_pose = round(0 * scale)
+        jaw_pose = round(0 * scale)
+        body_pose = round((63 - 24) * scale)
+        left_hand_pose = right_hand_pose = round(45 * scale)
+        if self.expression:
+            expression = 100
+        else:
+            expression = 0
+
+        b_j = 0
+        jaw_dim = jaw_pose
+        b_e = b_j + jaw_dim
+        eye_dim = leye_pose + reye_pose
+        b_b = b_e + eye_dim
+        body_dim = global_orient + body_pose
+        b_h = b_b + body_dim
+        hand_dim = left_hand_pose + right_hand_pose
+        b_f = b_h + hand_dim
+        face_dim = expression
+
+        self.dim_list = [b_j, b_e, b_b, b_h, b_f]
+        self.full_dim = jaw_dim + eye_dim + body_dim + hand_dim
+        self.pose = int(self.full_dim / round(3 * scale))
+        self.each_dim = [jaw_dim, eye_dim + body_dim, hand_dim, face_dim]

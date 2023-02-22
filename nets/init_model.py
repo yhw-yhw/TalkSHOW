@@ -18,6 +18,11 @@ def init_model(model_name, args, config):
             args,
             config,
         )
+    elif model_name == 's2g_body_ae':
+        generator = s2g_body_ae(
+            args,
+            config,
+        )
     else:
         raise ValueError
     return generator

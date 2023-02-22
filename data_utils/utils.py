@@ -198,6 +198,8 @@ def  get_mfcc_ta(audio_fn, eps=1e-6, fps=15, smlpx=False, sr=16000, n_mfcc=64, w
             audio_ft = speech_array.reshape(-1, 1)
         elif encoder_choice == 'meshtalk':
             audio_ft = 0.01 * speech_array / np.mean(np.abs(speech_array))
+        elif encoder_choice == 'onset':
+            audio_ft = librosa.onset.onset_detect(y=speech_array, sr=16000, units='time').reshape(-1, 1)
         else:
             audio, sr_0 = ta.load(audio_fn)
             if sr != sr_0:

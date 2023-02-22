@@ -92,8 +92,29 @@ class Encoder(nn.Module):
         return h
 
 
+class Frame_Enc(nn.Module):
+    def __init__(self, in_dim, num_hiddens):
+        super(Frame_Enc, self).__init__()
+        self.in_dim = in_dim
+        self.num_hiddens = num_hiddens
+
+        # self.enc = transformer_Enc(in_dim, num_hiddens, 2, 8, 256, 256, 256, 256, 0, dropout=0.1, n_position=4)
+        self.proj = nn.Conv1d(in_dim, num_hiddens, 1, 1)
+        self.enc = Res_CNR_Stack(num_hiddens, 2, leaky=True)
+        self.proj_1 = nn.Conv1d(256*4, num_hiddens, 1, 1)
+        self.proj_2 = nn.Conv1d(256*4, num_hiddens*2, 1, 1)
+
+    def forward(self, x):
+        # x = self.enc(x, None)[0].reshape(x.shape[0], -1, 1)
+        x = self.enc(self.proj(x)).reshape(x.shape[0], -1, 1)
+        second_last = self.proj_2(x)
+        last = self.proj_1(x)
+        return second_last, last
+
+
+
 class Decoder(nn.Module):
-    def __init__(self, out_dim, embedding_dim, num_hiddens, num_residual_layers, num_residual_hiddens):
+    def __init__(self, out_dim, embedding_dim, num_hiddens, num_residual_layers, num_residual_hiddens, ae=False):
         super(Decoder, self).__init__()
         self._num_hiddens = num_hiddens
         self._num_residual_layers = num_residual_layers
@@ -107,6 +128,11 @@ class Decoder(nn.Module):
         self._up_3 = ConvNormRelu(self._num_hiddens // 2, self._num_hiddens // 4, leaky=True, residual=True,
                                   sample='up')
         self._dec_3 = Res_CNR_Stack(self._num_hiddens // 4, self._num_residual_layers, leaky=True)
+
+        if ae:
+            self.frame_enc = Frame_Enc(out_dim, self._num_hiddens // 4)
+            self.gru_sl = nn.GRU(self._num_hiddens // 2, self._num_hiddens // 2, 1, batch_first=True)
+            self.gru_l = nn.GRU(self._num_hiddens // 4, self._num_hiddens // 4, 1, batch_first=True)
 
         self.project = nn.Conv1d(self._num_hiddens // 4, out_dim, 1, 1)
 
@@ -181,3 +207,29 @@ class VQVAE(nn.Module):
             x = self.decoder(e, pre_state.transpose(1, 2) if pre_state is not None else None)
         return x
 
+
+class AE(nn.Module):
+    """VQ-VAE"""
+
+    def __init__(self, in_dim, embedding_dim, num_embeddings,
+                 num_hiddens, num_residual_layers, num_residual_hiddens):
+        super().__init__()
+        self.in_dim = in_dim
+        self.embedding_dim = embedding_dim
+        self.num_embeddings = num_embeddings
+
+        self.encoder = Encoder(in_dim, embedding_dim, num_hiddens, num_residual_layers, num_residual_hiddens)
+        self.decoder = Decoder(in_dim, embedding_dim, num_hiddens, num_residual_layers, num_residual_hiddens, True)
+
+    def forward(self, gt_poses, id=None, pre_state=None):
+        z = self.encoder(gt_poses.transpose(1, 2))
+        if not self.training:
+            x_recon, cur_state = self.decoder(z, pre_state.transpose(1, 2) if pre_state is not None else None)
+            return z, x_recon
+        gt_recon, cur_state = self.decoder(z, pre_state.transpose(1, 2) if pre_state is not None else None)
+
+        return gt_recon.transpose(1, 2)
+
+    def encode(self, gt_poses, id=None):
+        z = self.encoder(gt_poses.transpose(1, 2))
+        return z

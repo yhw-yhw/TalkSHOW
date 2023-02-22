@@ -2,7 +2,7 @@ import os
 import sys
 
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+os.environ['CUDA_VISIBLE_DEVICES'] = '3'
 sys.path.append(os.getcwd())
 
 from tqdm import tqdm
@@ -16,6 +16,7 @@ import numpy as np
 import smplx as smpl
 
 from data_utils.lower_body import part2full, poses2pred
+from data_utils.utils import get_mfcc_ta
 from nets import *
 from nets.utils import get_path, get_dpath
 from trainer.options import parse_args
@@ -40,6 +41,11 @@ def init_model(model_name, model_path, args, config):
         )
     elif model_name == 's2g_body_pixel':
         generator = s2g_body_pixel(
+            args,
+            config,
+        )
+    elif model_name == 's2g_body_ae':
+        generator = s2g_body_ae(
             args,
             config,
         )
@@ -118,7 +124,7 @@ def test(test_loader, generator, FGD_handler, smplx_model, config):
             count = count + 1
             # if count == 10:
             #     break
-            aud, poses, exp = bat['aud_feat'].to('cuda').to(torch.float32), bat['poses'].to('cuda').to(torch.float32), \
+            _, poses, exp = bat['aud_feat'].to('cuda').to(torch.float32), bat['poses'].to('cuda').to(torch.float32), \
                               bat['expression'].to('cuda').to(torch.float32)
             id = bat['speaker'].to('cuda') - 20
             betas = bat['betas'][0].to('cuda').to(torch.float64)
@@ -164,7 +170,8 @@ def test(test_loader, generator, FGD_handler, smplx_model, config):
             poses = torch.cat([zero_face[0, :, :3], poses[:, 3:165], zero_face[0, :, 3:]], dim=-1)
             gt_joints = get_joints(smplx_model, betas, poses[:pred_joints.shape[1]])
             FGD_handler.push_joints(pred_joints, gt_joints)
-            FGD_handler.push_aud(aud)
+            aud = get_mfcc_ta(cur_wav_file, fps=30, sr=16000, am='not None', encoder_choice='onset')
+            FGD_handler.push_aud(torch.from_numpy(aud))
 
             bat_loss_dict = body_loss(gt_joints, pred_joints)
 
@@ -181,9 +188,10 @@ def test(test_loader, generator, FGD_handler, smplx_model, config):
         # MAAC = FGD_handler.get_MAAC()
         # print(MAAC)
         fgd_dist, feat_dist = FGD_handler.get_scores()
-        print(fgd_dist.item(), feat_dist.item())
+        print('fgd_dist=', fgd_dist.item())
+        print('feat_dist=', feat_dist.item())
         BCscore = FGD_handler.get_BCscore()
-        print(BCscore)
+        print('Beat consistency score=', BCscore)
 
 
 

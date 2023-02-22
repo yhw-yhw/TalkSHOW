@@ -12,7 +12,7 @@
   },
   "Data": {
     "data_root": "../ExpressiveWholeBodyDatasetv1.0/",
-    "pklname": "_6d_wv2.pkl",
+    "pklname": "_3d_wv2.pkl",
     "whole_video": true,
     "pose": {
       "normalization": false,

@@ -176,9 +176,6 @@ class TrainWrapper(TrainWrapperBaseClass):
         # assert self.args.infer, "train mode"
         self.generator.eval()
 
-        self.device = 'cpu'
-        self.generator.to('cpu')
-
         if self.config.Data.pose.normalization:
             assert norm_stats is not None
             data_mean = norm_stats[0]
@@ -186,9 +183,9 @@ class TrainWrapper(TrainWrapperBaseClass):
 
         # assert initial_pose.shape[-1] == pre_length
         if initial_pose is not None:
-            gt = initial_pose[:,:,:].permute(0, 2, 1).to(self.device).to(torch.float32)
-            pre_poses = initial_pose[:,:,:15].permute(0, 2, 1).to(self.device).to(torch.float32)
-            poses = initial_pose.permute(0, 2, 1).to(self.device).to(torch.float32)
+            gt = initial_pose[:,:,:].permute(0, 2, 1).to(self.generator.device).to(torch.float32)
+            pre_poses = initial_pose[:,:,:15].permute(0, 2, 1).to(self.generator.device).to(torch.float32)
+            poses = initial_pose.permute(0, 2, 1).to(self.generator.device).to(torch.float32)
             B = pre_poses.shape[0]
         else:
             gt = None
@@ -196,19 +193,19 @@ class TrainWrapper(TrainWrapperBaseClass):
             B = 1
 
         if type(aud_fn) == torch.Tensor:
-            aud_feat = torch.tensor(aud_fn, dtype=torch.float32).to(self.device)
+            aud_feat = torch.tensor(aud_fn, dtype=torch.float32).to(self.generator.device)
             num_poses_to_generate = aud_feat.shape[-1]
         else:
             aud_feat = get_mfcc_ta(aud_fn, am=am, am_sr=am_sr, fps=30, encoder_choice='faceformer')
             aud_feat = aud_feat[np.newaxis, ...].repeat(B, axis=0)
-            aud_feat = torch.tensor(aud_feat, dtype=torch.float32).to(self.device).transpose(1, 2)
+            aud_feat = torch.tensor(aud_feat, dtype=torch.float32).to(self.generator.device).transpose(1, 2)
         if frame is None:
             frame = aud_feat.shape[2]*30//16000
         #
         if id is None:
-            id = torch.tensor([[0, 0, 0, 0]], dtype=torch.float32, device=self.device)
+            id = torch.tensor([[0, 0, 0, 0]], dtype=torch.float32, device=self.generator.device)
         else:
-            id = F.one_hot(id, self.num_classes)
+            id = F.one_hot(id, self.num_classes).to(self.generator.device)
 
         with torch.no_grad():
             pred_poses = self.generator(aud_feat, pre_poses, id, time_steps=frame)[0]
@@ -233,7 +230,7 @@ class TrainWrapper(TrainWrapperBaseClass):
 
         B = 1
 
-        id = torch.tensor([[0, 0, 0, 0]], dtype=torch.float32, device=self.device)
+        id = torch.tensor([[0, 0, 0, 0]], dtype=torch.float32, device=self.generator.device)
         id = id.repeat(wv2_feat.shape[0], 1)
 
         with torch.no_grad():

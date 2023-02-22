@@ -83,6 +83,8 @@ class EmbeddingSpaceEvaluator:
         total_beat = 0
         for joints, audio_beat_time in zip(self.generated_joints_list, self.audio_beat_list):
             motion_beat_time = []
+            if joints.dim() == 4:
+                joints = joints[0]
             joints[:, 15:21] = joints[:, 16:22]
             vec = joints[:, 15:21] - joints[:, 13:19]
             inner_product = torch.einsum('kij,kij->ki', [vec[:, 2:], vec[:, :-2]])
