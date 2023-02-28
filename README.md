@@ -1,4 +1,4 @@
-# TalkSHOW: Generating Holistic 3D Human Motion from Speech
+# TalkSHOW: Generating Holistic 3D Human Motion from Speech [CVPR2023]
 
 The official PyTorch implementation of the **CVPR2023** paper [**"Generating Holistic 3D Human Motion from Speech"**](https://arxiv.org/abs/2212.04420).
 
