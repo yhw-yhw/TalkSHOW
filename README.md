@@ -114,10 +114,10 @@ python scripts/demo.py --config_file ./config/body_pixel.json --infer --audio_fi
 ## Citation
 If you find our work useful to your research, please consider citing:
 ```
-@article{yi2022generating,
+@inproceedings{yi2022generating,
   title={Generating Holistic 3D Human Motion from Speech},
   author={Yi, Hongwei and Liang, Hualin and Liu, Yifei and Cao, Qiong and Wen, Yandong and Bolkart, Timo and Tao, Dacheng and Black, Michael J},
-  journal={CVPR},
+  booktitle={CVPR},
   year={2023}
 }
 ```
