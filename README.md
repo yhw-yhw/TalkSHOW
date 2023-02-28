@@ -1,6 +1,6 @@
 # TalkSHOW: Generating Holistic 3D Human Motion from Speech
 
-The official PyTorch implementation of the paper [**"Generating Holistic 3D Human Motion from Speech"**](https://arxiv.org/abs/2212.04420).
+The official PyTorch implementation of the **CVPR2023** paper [**"Generating Holistic 3D Human Motion from Speech"**](https://arxiv.org/abs/2212.04420).
 
 Please visit our [**webpage**](https://talkshow.is.tue.mpg.de/) for more details.
 
@@ -117,8 +117,8 @@ If you find our work useful to your research, please consider citing:
 @article{yi2022generating,
   title={Generating Holistic 3D Human Motion from Speech},
   author={Yi, Hongwei and Liang, Hualin and Liu, Yifei and Cao, Qiong and Wen, Yandong and Bolkart, Timo and Tao, Dacheng and Black, Michael J},
-  journal={arXiv preprint arXiv:2212.04420},
-  year={2022}
+  journal={CVPR},
+  year={2023}
 }
 ```
 
