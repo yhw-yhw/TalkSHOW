@@ -25,7 +25,6 @@ import tempfile
 import numpy as np
 import matplotlib as mpl
 import matplotlib.cm as cm
-from psbody.mesh import Mesh
 
 
 def get_unit_factor(unit):
@@ -40,7 +39,7 @@ def get_unit_factor(unit):
 
 
 def render_mesh_helper(mesh, t_center, rot=np.zeros(3), tex_img=None, v_colors=None,
-                       errors=None, error_unit='m', min_dist_in_mm=0.0, max_dist_in_mm=3.0, z_offset=0, xmag=0.5,
+                       errors=None, error_unit='m', min_dist_in_mm=0.0, max_dist_in_mm=3.0, z_offset=1.0, xmag=0.5,
                        y=0.7, z=1, camera='o', r=None):
     camera_params = {'c': np.array([0, 0]),
                      'k': np.array([-0.19816071, 0.92822711, 0, 0, 0]),
@@ -48,8 +47,8 @@ def render_mesh_helper(mesh, t_center, rot=np.zeros(3), tex_img=None, v_colors=N
 
     frustum = {'near': 0.01, 'far': 3.0, 'height': 800, 'width': 800}
 
-    mesh_copy = Mesh(mesh.v, mesh.f)
-    mesh_copy.v[:] = cv2.Rodrigues(rot)[0].dot((mesh_copy.v - t_center).T).T + t_center
+    v, f = mesh
+    v = cv2.Rodrigues(rot)[0].dot((v - t_center).T).T + t_center
 
     texture_rendering = tex_img is not None and hasattr(mesh, 'vt') and hasattr(mesh, 'ft')
     if texture_rendering:
@@ -86,7 +85,7 @@ def render_mesh_helper(mesh, t_center, rot=np.zeros(3), tex_img=None, v_colors=N
     color = np.array([0.3, 0.5, 0.55])
 
     if not texture_rendering:
-        tri_mesh = trimesh.Trimesh(vertices=mesh_copy.v, faces=mesh_copy.f, vertex_colors=rgb_per_v)
+        tri_mesh = trimesh.Trimesh(vertices=v, faces=f, vertex_colors=rgb_per_v)
         render_mesh = pyrender.Mesh.from_trimesh(tri_mesh,
                                                  smooth=True,
                                                  material=pyrender.MetallicRoughnessMaterial(
@@ -99,8 +98,8 @@ def render_mesh_helper(mesh, t_center, rot=np.zeros(3), tex_img=None, v_colors=N
     scene = pyrender.Scene(ambient_light=[.2, .2, .2], bg_color=[255, 255, 255])
 
     if camera == 'o':
-        camera = pyrender.OrthographicCamera(xmag=xmag, ymag=xmag)
-        # camera = pyrender.OrthographicCamera(xmag=xmag, ymag=xmag*1.8)
+        ymag = xmag * z_offset
+        camera = pyrender.OrthographicCamera(xmag=xmag, ymag=ymag)
     elif camera == 'i':
         camera = pyrender.IntrinsicsCamera(fx=camera_params['f'][0],
                                            fy=camera_params['f'][1],

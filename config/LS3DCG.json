@@ -1,0 +1,64 @@
+{
+  "config_root_path": "/is/cluster/scratch/hyi/ExpressiveBody/SMPLifyX4/scripts",
+  "dataset_load_mode": "pickle",
+  "store_file_path": "store.pkl",
+  "smplx_npz_path": "visualise/smplx_model/SMPLX_NEUTRAL_2020.npz",
+  "extra_joint_path": "visualise/smplx_model/smplx_extra_joints.yaml",
+  "j14_regressor_path": "visualise/smplx_model/SMPLX_to_J14.pkl",
+  "param": {
+    "w_j": 1,
+    "w_b": 1,
+    "w_h": 1
+  },
+  "Data": {
+    "data_root": "../ExpressiveWholeBodyDatasetv1.0/",
+    "pklname": "_3d_mfcc.pkl",
+    "whole_video": false,
+    "pose": {
+      "normalization": false,
+      "convert_to_6d": false,
+      "norm_method": "all",
+      "augmentation": false,
+      "generate_length": 88,
+      "pre_pose_length": 0,
+      "pose_dim": 99,
+      "expression": true
+    },
+    "aud": {
+      "feat_method": "mfcc",
+      "aud_feat_dim": 64,
+      "aud_feat_win_size": null,
+      "context_info": false
+    }
+  },
+  "Model": {
+    "model_type": "body",
+    "model_name": "s2g_LS3DCG",
+    "code_num": 2048,
+    "AudioOpt": "Adam",
+    "encoder_choice": "mfcc",
+    "gan": false
+  },
+  "DataLoader": {
+    "batch_size": 128,
+    "num_workers": 0
+  },
+  "Train": {
+    "epochs": 100,
+    "max_gradient_norm": 5,
+    "learning_rate": {
+      "generator_learning_rate": 1e-4,
+      "discriminator_learning_rate": 1e-4
+    },
+    "weights": {
+      "keypoint_loss_weight": 1.0,
+      "gan_loss_weight": 1.0
+    }
+  },
+  "Log": {
+    "save_every": 50,
+    "print_every": 200,
+    "name": "LS3DCG"
+  }
+}
+  

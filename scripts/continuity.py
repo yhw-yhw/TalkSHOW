@@ -1,6 +1,6 @@
 import os
 import sys
-
+# os.environ["PYOPENGL_PLATFORM"] = "egl"
 from transformers import Wav2Vec2Processor
 from visualise.rendering import RenderTool
 

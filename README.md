@@ -8,7 +8,7 @@ Please visit our [**webpage**](https://talkshow.is.tue.mpg.de/) for more details
 
 ## HighLight
 
-We directly provide the input and our output for the demo data, you can download [here](https://drive.google.com/file/d/1AoHTO9ML-IfatuRqPKQrsU0S-TZrQfsl/view?usp=share_link). TalkSHOW can generalize well on English, French, Songs so far. Looking forward to more demos. 
+We directly provide the input and our output for the demo data, you can find them in `/demo/` and `/demo_audio/`. TalkSHOW can generalize well on English, French, Songs so far. Looking forward to more demos. 
 
 You can directly use the generated motion to animate your 3D character or your own digital avatar. We will provide more demos, please stay tuned. And we are quite looking forward to your pull request.
 

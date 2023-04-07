@@ -1,6 +1,6 @@
 import os
 import sys
-
+# os.environ["PYOPENGL_PLATFORM"] = "egl"
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 sys.path.append(os.getcwd())
 
@@ -24,8 +24,8 @@ from data_utils.rotation_conversion import rotation_6d_to_matrix, matrix_to_axis
 from data_utils.lower_body import part2full, pred2poses, poses2pred, poses2poses
 from visualise.rendering import RenderTool
 
-import time
-
+global device
+device = 'cpu'
 
 def init_model(model_name, model_path, args, config):
     if model_name == 's2g_face':
@@ -40,6 +40,11 @@ def init_model(model_name, model_path, args, config):
         )
     elif model_name == 's2g_body_pixel':
         generator = s2g_body_pixel(
+            args,
+            config,
+        )
+    elif model_name == 's2g_LS3DCG':
+        generator = LS3DCG(
             args,
             config,
         )
@@ -151,7 +156,7 @@ global_orient = torch.tensor([3.0747, -0.0158, -0.0152])
 
 
 def infer(g_body, g_face, smplx_model, rendertool, config, args):
-    betas = torch.zeros([1, 300], dtype=torch.float64).to('cuda')
+    betas = torch.zeros([1, 300], dtype=torch.float64).to(device)
     am = Wav2Vec2Processor.from_pretrained("vitouphy/wav2vec2-xls-r-300m-phoneme")
     am_sr = 16000
     num_sample = args.num_sample
@@ -160,7 +165,7 @@ def infer(g_body, g_face, smplx_model, rendertool, config, args):
     face = args.only_face
     stand = args.stand
     if face:
-        body_static = torch.zeros([1, 162], device='cuda')
+        body_static = torch.zeros([1, 162], device=device)
         body_static[:, 6:9] = torch.tensor([3.0747, -0.0158, -0.0152]).reshape(1, 3).repeat(body_static.shape[0], 1)
 
     result_list = []
@@ -174,7 +179,7 @@ def infer(g_body, g_face, smplx_model, rendertool, config, args):
                                       am=am,
                                       am_sr=am_sr
                                       )
-    pred_face = torch.tensor(pred_face).squeeze().to('cuda')
+    pred_face = torch.tensor(pred_face).squeeze().to(device)
     # pred_face = torch.zeros([gt.shape[0], 105])
 
     if config.Data.pose.convert_to_6d:
@@ -185,7 +190,7 @@ def infer(g_body, g_face, smplx_model, rendertool, config, args):
         pred_jaw = pred_face[:, :3]
         pred_face = pred_face[:, 3:]
 
-    id = torch.tensor([id], device='cuda')
+    id = torch.tensor([id], device=device)
 
     for i in range(num_sample):
         pred_res = g_body.infer_on_audio(cur_wav_file,
@@ -197,7 +202,7 @@ def infer(g_body, g_face, smplx_model, rendertool, config, args):
                                          fps=30,
                                          w_pre=False
                                          )
-        pred = torch.tensor(pred_res).squeeze().to('cuda')
+        pred = torch.tensor(pred_res).squeeze().to(device)
 
         if pred.shape[0] < pred_face.shape[0]:
             repeat_frame = pred[-1].unsqueeze(dim=0).repeat(pred_face.shape[0] - pred.shape[0], 1)
@@ -213,7 +218,11 @@ def infer(g_body, g_face, smplx_model, rendertool, config, args):
             pred = matrix_to_axis_angle(rotation_6d_to_matrix(pred))
             pred = pred.reshape(pred.shape[0], -1)
 
-        pred = torch.cat([pred_jaw, pred, pred_face], dim=-1)
+        if config.Model.model_name == 's2g_LS3DCG':
+            pred = torch.cat([pred[:, :3], pred[:, 103:], pred[:, 3:103]], dim=-1)
+        else:
+            pred = torch.cat([pred_jaw, pred, pred_face], dim=-1)
+
         # pred[:, 9:12] = global_orient
         pred = part2full(pred, stand)
         if face:
@@ -241,8 +250,9 @@ def infer(g_body, g_face, smplx_model, rendertool, config, args):
 def main():
     parser = parse_args()
     args = parser.parse_args()
-    device = torch.device(args.gpu)
-    torch.cuda.set_device(device)
+    # device = torch.device(args.gpu)
+    # torch.cuda.set_device(device)
+
 
     config = load_JsonConfig(args.config_file)
 
@@ -282,7 +292,7 @@ def main():
                         create_transl=False,
                         # gender='ne',
                         dtype=dtype, )
-    smplx_model = smpl.create(**model_params).to('cuda')
+    smplx_model = smpl.create(**model_params).to(device)
     print('init rendertool...')
     rendertool = RenderTool('visualise/video/' + config.Log.name)
 

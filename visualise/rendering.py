@@ -11,8 +11,6 @@ import numpy as np
 from scipy.io import wavfile
 import pyrender
 
-from psbody.mesh import Mesh
-
 import librosa
 
 from tqdm import tqdm
@@ -95,11 +93,10 @@ def add_image_text(img, text, color=(0,0,255), w=800, h=800):
 
 class RenderTool():
     def __init__(self, out_path):
-        self.template_mesh = Mesh()
         path = os.path.join(os.getcwd(), 'visualise/smplx/SMPLX_NEUTRAL.npz')
         model_data = np.load(path, allow_pickle=True)
         data_struct = Struct(**model_data)
-        self.template_mesh.f = data_struct.f
+        self.f = data_struct.f
         self.out_path = out_path
         if not os.path.exists(self.out_path):
             os.makedirs(self.out_path)
@@ -140,6 +137,7 @@ class RenderTool():
             v[:, :, 1] = -v[:, :, 1]
             v[:, :, 2] = -v[:, :, 2]
         viewport_height = 800
+        z_offset = 1.0
         num_video = len(v_list)
         assert num_video in [1, 2, 3, 9, 12, 16, 18]
         if num_video == 1:
@@ -160,6 +158,7 @@ class RenderTool():
         if whole_body:
             width, height = 800, 1440
             viewport_height = 1440
+            z_offset = 1.8
 
         sr = 22000
         audio, sr = librosa.load(cur_wav_file, sr=16000)
@@ -170,7 +169,7 @@ class RenderTool():
         tmp_video_file.close()
         if int(cv2.__version__[0]) < 3:
             print('cv2 < 3')
-            writer = cv2.VideoWriter(tmp_video_file.name, cv2.cv.CV_FOURCC(*'mp4v'), 30, (width, width), True)
+            writer = cv2.VideoWriter(tmp_video_file.name, cv2.cv.CV_FOURCC(*'mp4v'), 30, (width, height), True)
         else:
             print('cv2 >= 3')
             writer = cv2.VideoWriter(tmp_video_file.name, cv2.VideoWriter_fourcc(*'mp4v'), 30, (width, height), True)
@@ -191,10 +190,10 @@ class RenderTool():
             cur_img = []
             for i in range(len(v_list)):
                 if face:
-                    img = render_mesh_helper(Mesh(v_list[i][i_frame], self.template_mesh.f), center,
-                                                  r=r, xmag=0.15, y=0.95, z=1.0, camera='o')
+                    img = render_mesh_helper((v_list[i][i_frame], self.f), center,
+                                             r=r, xmag=0.15, y=1, z=1.0, camera='o')
                 else:
-                    img = render_mesh_helper(Mesh(v_list[i][i_frame], self.template_mesh.f), center, camera='o',r=r, y=0.7)
+                    img = render_mesh_helper((v_list[i][i_frame], self.f), center, camera='o', r=r, y=0.7, z_offset=z_offset)
                 # sen = get_sen(i, num_video, i_frame, pos)
                 # if transcript is not None:
                 #     sen = str(int(transcript[i_frame].item()))
@@ -237,6 +236,8 @@ class RenderTool():
 
         cmd = ('ffmpeg' + ' -i {0} -i {1} -vcodec h264 -ac 2 -channel_layout stereo -pix_fmt yuv420p {2}'.format(
             tmp_audio_file.name, tmp_video_file.name, video_fname)).split()
+        # cmd = ('ffmpeg' + '-i {0} -vcodec h264 -ac 2 -channel_layout stereo -pix_fmt yuv420p {1}'.format(
+        #     tmp_video_file.name, video_fname)).split()
         call(cmd)
         os.remove(tmp_audio_file.name)
         os.remove(tmp_video_file.name)

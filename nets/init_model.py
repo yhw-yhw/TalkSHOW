@@ -23,6 +23,11 @@ def init_model(model_name, args, config):
             args,
             config,
         )
+    elif model_name == 's2g_LS3DCG':
+        generator = LS3DCG(
+            args,
+            config,
+        )
     else:
         raise ValueError
     return generator

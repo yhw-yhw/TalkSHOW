@@ -1,6 +1,6 @@
 import os
 import sys
-
+# os.environ["PYOPENGL_PLATFORM"] = "egl"
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 sys.path.append(os.getcwd())
 
@@ -40,6 +40,11 @@ def init_model(model_name, model_path, args, config):
         )
     elif model_name == 's2g_body_pixel':
         generator = s2g_body_pixel(
+            args,
+            config,
+        )
+    elif model_name == 's2g_LS3DCG':
+        generator = LS3DCG(
             args,
             config,
         )
@@ -226,7 +231,7 @@ def infer(data_root, g_body, g_face, g_body2, exp_name, infer_loader, infer_set,
                                                  norm_stats=norm_stats,
                                                  txgfile=None,
                                                  id=id,
-                                                 var=var,
+                                                 # var=var,
                                                  fps=30,
                                                  w_pre=False
                                                  )
@@ -264,7 +269,7 @@ def infer(data_root, g_body, g_face, g_body2, exp_name, infer_loader, infer_set,
                                                       initial_pose=poses_,
                                                       norm_stats=norm_stats,
                                                       txgfile=None,
-                                                      var=var,
+                                                      # var=var,
                                                       fps=30,
                                                       w_pre=False
                                                       )
