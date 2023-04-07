@@ -57,7 +57,7 @@ Modify ``data_root`` in ``config/*.json`` to the dataset-path.
 
 ### 3. Download the pretrained models (Optional)
 
-Download [**pretrained models**](https://drive.google.com/file/d/1jKBS_30NMM_NZEyUSBDSgBcRJmlH77a-/view?usp=sharing),
+Download [**pretrained models**](https://drive.google.com/file/d/1bC0ZTza8HOhLB46WOJ05sBywFvcotDZG/view?usp=sharing),
 unzip and place it in the TalkSHOW folder, i.e. ``path-to-TalkSHOW/experiments``.
 
 ### 4. Training
