@@ -109,8 +109,19 @@ python scripts/demo.py --config_file ./config/body_pixel.json --infer --audio_fi
 python scripts/demo.py --config_file ./config/body_pixel.json --infer --audio_file ./demo_audio/rich.wav --id 0
 # the song demo
 python scripts/demo.py --config_file ./config/body_pixel.json --infer --audio_file ./demo_audio/song.wav --id 0
-
 ````
+### 6. Baseline
+
+For training the reproducted "Learning Speech-driven 3D Conversational Gestures from Video", you could run
+```bash
+python -W ignore scripts/train.py --speakers oliver seth conan chemistry --config_file ./config/LS3DCG.json
+```
+
+For visualization with the pretrained model, download the above [pretrained models](#3-download-the-pretrained-models--optional-) and run
+```bash
+python scripts/demo.py --config_file ./config/LS3DCG.json --infer --audio_file ./demo_audio/style.wav --body_model_name s2g_LS3DCG --body_model_path experiments/2022-10-19-smplx_S2G-LS3DCG/ckpt-99.pth --id 0
+```
+
 ## Citation
 If you find our work useful to your research, please consider citing:
 ```

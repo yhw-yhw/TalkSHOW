@@ -4,7 +4,7 @@ def parse_args():
     parser = ArgumentParser()
     parser.add_argument('--gpu', default=0, type=int)
     parser.add_argument('--save_dir', default='experiments', type=str)
-    parser.add_argument('--exp_name', type=str)
+    parser.add_argument('--exp_name', default='smplx_S2G', type=str)
     parser.add_argument('--speakers', nargs='+')
     parser.add_argument('--seed', default=1, type=int)
     parser.add_argument('--model_name', type=str)
