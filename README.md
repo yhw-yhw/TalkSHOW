@@ -12,11 +12,19 @@ We directly provide the input and our output for the demo data, you can find the
 
 You can directly use the generated motion to animate your 3D character or your own digital avatar. We will provide more demos, please stay tuned. And we are quite looking forward to your pull request.
 
+## Notes
+
+We are using 100 dimension parameters for SMPL-X facial expression, if you need other dimensions parameters, you can use this code to convert. 
+
+```
+https://github.com/yhw-yhw/SHOW/blob/main/cvt_exp_dim_tool.py
+```
 
 ## TODO
 
 - [ ] Hugging Face Demo
 - [ ] Animated 2D videos by the generated motion from TalkSHOW.
+
 
 ## Getting started
 
