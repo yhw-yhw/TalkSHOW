@@ -62,7 +62,8 @@ class Trainer():
         #     self.config.Train.epochs=30
 
         self.device = torch.device(self.args.device)
-        torch.cuda.set_device(self.device)
+        if self.device.type == "cuda":
+            torch.cuda.set_device(self.device)
         self.setup_seed(self.args.seed)
         self.set_train_dir()
 
