@@ -1,5 +1,6 @@
 import os
 import pickle
+import io
 from tqdm import tqdm
 import shutil
 import torch
@@ -66,6 +67,13 @@ def read_pkl(data):
         return 0
 
 
+class CPU_Unpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == 'torch.storage' and name == '_load_from_bytes':
+            return lambda b: torch.load(io.BytesIO(b), map_location='cpu')
+        else: return super().find_class(module, name)
+
+
 for speaker_name in speakers:
     speaker_root = os.path.join(data_root, speaker_name)
 
@@ -125,7 +133,11 @@ for speaker_name in speakers:
                 huaide = huaide + 1
                 continue
 
-            data = pickle.load(f)
+            if torch.cuda.is_available():
+                data = pickle.load(f)
+            else:
+                data = CPU_Unpickler(f).load()
+
             w = read_pkl(data)
             f.close()
             quality = quality + w
