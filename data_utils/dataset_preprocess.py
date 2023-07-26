@@ -9,7 +9,7 @@ import librosa
 import random
 
 speakers = ['seth', 'conan', 'oliver', 'chemistry']
-data_root = "../ExpressiveWholeBodyDatasetv1.0/"
+data_root = "./data/ExpressiveWholeBodyDatasetv1.0/"
 split = 'train'
 
 
