@@ -1,6 +1,9 @@
 import pickle
 import sys
 import os
+import io
+
+import torch.cuda
 
 sys.path.append(os.getcwd())
 
@@ -12,6 +15,13 @@ from data_utils.consts import speaker_id
 from data_utils.lower_body import count_part
 import random
 from data_utils.rotation_conversion import axis_angle_to_matrix, matrix_to_rotation_6d
+
+
+class CPU_Unpickler(pickle.Unpickler):
+    def find_class(self, module, name):
+        if module == 'torch.storage' and name == '_load_from_bytes':
+            return lambda b: torch.load(io.BytesIO(b), map_location='cpu')
+        else: return super().find_class(module, name)
 
 with open('data_utils/hand_component.json') as file_obj:
     comp = json.load(file_obj)
@@ -167,7 +177,11 @@ class SmplxDataset():
         self.loaded_data = {}
         self.complete_data = []
         f = open(motion_fn, 'rb+')
-        data = pickle.load(f)
+
+        if torch.cuda.is_available():
+            data = pickle.load(f)
+        else:
+            data = CPU_Unpickler(f).load()
 
         self.betas = np.array(data['betas'])
 
@@ -285,47 +299,47 @@ class SmplxDataset():
                     if self.convert_to_6d:
                         if self.expression:
                             data_sample = {
-                                'poses': seq_data[:, :330].astype(np.float).transpose(1, 0),
-                                'expression': seq_data[:, 330:].astype(np.float).transpose(1, 0),
-                                # 'nzero': seq_data[:, 375:].astype(np.float).transpose(1, 0),
-                                'aud_feat': audio_feat.astype(np.float).transpose(1, 0),
+                                'poses': seq_data[:, :330].astype(np.float32).transpose(1, 0),
+                                'expression': seq_data[:, 330:].astype(np.float32).transpose(1, 0),
+                                # 'nzero': seq_data[:, 375:].astype(np.float32).transpose(1, 0),
+                                'aud_feat': audio_feat.astype(np.float32).transpose(1, 0),
                                 'speaker': speaker_id[self.speaker],
                                 'betas': self.betas,
                                 'aud_file': self.audio_fn,
                             }
                         else:
                             data_sample = {
-                                'poses': seq_data[:, :330].astype(np.float).transpose(1, 0),
-                                'nzero': seq_data[:, 330:].astype(np.float).transpose(1, 0),
-                                'aud_feat': audio_feat.astype(np.float).transpose(1, 0),
+                                'poses': seq_data[:, :330].astype(np.float32).transpose(1, 0),
+                                'nzero': seq_data[:, 330:].astype(np.float32).transpose(1, 0),
+                                'aud_feat': audio_feat.astype(np.float32).transpose(1, 0),
                                 'speaker': speaker_id[self.speaker],
                                 'betas': self.betas
                             }
                     else:
                         if self.expression:
                             data_sample = {
-                                'poses': seq_data[:, :165].astype(np.float).transpose(1, 0),
-                                'expression': seq_data[:, 165:].astype(np.float).transpose(1, 0),
-                                'aud_feat': audio_feat.astype(np.float).transpose(1, 0),
-                                # 'wv2_feat': wv2_feat.astype(np.float).transpose(1, 0),
+                                'poses': seq_data[:, :165].astype(np.float32).transpose(1, 0),
+                                'expression': seq_data[:, 165:].astype(np.float32).transpose(1, 0),
+                                'aud_feat': audio_feat.astype(np.float32).transpose(1, 0),
+                                # 'wv2_feat': wv2_feat.astype(np.float32).transpose(1, 0),
                                 'speaker': speaker_id[self.speaker],
                                 'aud_file': self.audio_fn,
                                 'betas': self.betas
                             }
                         else:
                             data_sample = {
-                                'poses': seq_data.astype(np.float).transpose(1, 0),
-                                'aud_feat': audio_feat.astype(np.float).transpose(1, 0),
+                                'poses': seq_data.astype(np.float32).transpose(1, 0),
+                                'aud_feat': audio_feat.astype(np.float32).transpose(1, 0),
                                 'speaker': speaker_id[self.speaker],
                                 'betas': self.betas
                             }
                     return data_sample
                 else:
                     data_sample = {
-                        'poses': seq_data[:, :330].astype(np.float).transpose(1, 0),
-                        'expression': seq_data[:, 330:].astype(np.float).transpose(1, 0),
-                        # 'nzero': seq_data[:, 325:].astype(np.float).transpose(1, 0),
-                        'aud_feat': audio_feat.astype(np.float).transpose(1, 0),
+                        'poses': seq_data[:, :330].astype(np.float32).transpose(1, 0),
+                        'expression': seq_data[:, 330:].astype(np.float32).transpose(1, 0),
+                        # 'nzero': seq_data[:, 325:].astype(np.float32).transpose(1, 0),
+                        'aud_feat': audio_feat.astype(np.float32).transpose(1, 0),
                         'aud_file': self.audio_fn,
                         'speaker': speaker_id[self.speaker],
                         'betas': self.betas
