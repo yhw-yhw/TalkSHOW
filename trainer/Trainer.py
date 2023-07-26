@@ -61,7 +61,7 @@ class Trainer():
         #     self.config.param.w_h=self.args.w_h
         #     self.config.Train.epochs=30
 
-        self.device = torch.device(self.args.gpu)
+        self.device = torch.device(self.args.device)
         torch.cuda.set_device(self.device)
         self.setup_seed(self.args.seed)
         self.set_train_dir()

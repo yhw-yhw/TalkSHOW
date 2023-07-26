@@ -229,7 +229,7 @@ class TrainWrapper(TrainWrapperBaseClass):
     def __init__(self, args, config) -> None:
         self.args = args
         self.config = config
-        self.device = torch.device(self.args.gpu)
+        self.device = torch.device(self.args.device)
         self.global_step = 0
         self.convert_to_6d = self.config.Data.pose.convert_to_6d
         self.init_params()
