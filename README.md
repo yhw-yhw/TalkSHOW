@@ -22,7 +22,7 @@ https://github.com/yhw-yhw/SHOW/blob/main/cvt_exp_dim_tool.py
 
 ## TODO
 
-- [ ] Hugging Face Demo
+- [x] [🤗Hugging Face Demo](https://huggingface.co/spaces/feifeifeiliu/TalkSHOW)
 - [ ] Animated 2D videos by the generated motion from TalkSHOW.
 
 
@@ -125,7 +125,7 @@ python scripts/demo.py --config_file ./config/body_pixel.json --infer --audio_fi
 ````
 ### 6. Baseline
 
-For training the reproducted "Learning Speech-driven 3D Conversational Gestures from Video", you could run
+For training the reproducted "Learning Speech-driven 3D Conversational Gestures from Video" (Habibie et al.), you could run
 ```bash
 python -W ignore scripts/train.py --speakers oliver seth conan chemistry --config_file ./config/LS3DCG.json
 ```
